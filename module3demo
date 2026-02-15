@@ -1,0 +1,85 @@
+using System;
+using System.Collections.Generic;
+
+namespace Module3Discussion
+{
+    public interface IReportable
+    {
+        string BuildReport();
+    }
+
+    [Flags]
+    public enum BorderSides
+    {
+        None = 0,
+        Left = 1,
+        Right = 2,
+        Top = 4,
+        Bottom = 8,
+        All = Left | Right | Top | Bottom
+    }
+    {
+        private int _position = 0;
+        private readonly T[] _data = new T[10];
+
+        public void Push(T item) => _data[_position++] = item;
+
+        public T Pop() => _data[--_position];
+    }
+    public class Stock : IReportable
+    {
+        public decimal CurrentPrice { get; set; }
+        public decimal SharesOwned { get; set; }
+
+        public decimal Worth => CurrentPrice * SharesOwned;
+
+        public string BuildReport()
+            => $"Stock Report -> Price: {CurrentPrice:C}, Shares: {SharesOwned}, Worth: {Worth:C}";
+    }
+    public class Bunny
+    {
+        public string Name;
+        public bool LikesCarrots;
+        public bool LikesHumans;
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            Bunny b1 = new Bunny
+            {
+                Name = "Bo",
+                LikesCarrots = true,
+                LikesHumans = false
+            };
+
+            var stock = new Stock
+            {
+                CurrentPrice = 50m,
+                SharesOwned = 100m
+            };
+
+            PrintReport(stock);
+
+            BorderSides sides = BorderSides.Left | BorderSides.Right;
+            Console.WriteLine($"BorderSides selected: {sides}");
+            Console.WriteLine($"Includes Left? {(sides & BorderSides.Left) != 0}");
+
+            var intStack = new SimpleStack<int>();
+            intStack.Push(9);
+            Console.WriteLine($"Popped from int stack: {intStack.Pop()}");
+
+            var stringStack = new SimpleStack<string>();
+            stringStack.Push("sausage");
+            Console.WriteLine($"Popped from string stack: {stringStack.Pop()}");
+
+            Console.WriteLine($"Bunny -> Name: {b1.Name}, LikesCarrots: {b1.LikesCarrots}, LikesHumans: {b1.LikesHumans}");
+        }
+
+        static void PrintReport(IReportable item)
+        {
+            Console.WriteLine(item.BuildReport());
+        }
+    }
+}
